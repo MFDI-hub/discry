@@ -1,0 +1,44 @@
+[
+  {
+    "channel": "stable",
+    "build_number": 681034,
+    "version_hash": "87a3b4d3ee8b73056892cd21ef68b66feb47a0e4",
+    "build_id": "87a3b4d3ee8b73056892cd21ef68b66feb47a0e4",
+    "capabilities": 1767421,
+    "capability_values": [
+      1767421
+    ],
+    "client_build_number": 681034,
+    "release_channel": "stable",
+    "built_at": "1795626454431",
+    "first_seen": "2026-11-25T23:37:45.453974+00:00"
+  },
+  {
+    "channel": "ptb",
+    "build_number": 681034,
+    "version_hash": "87a3b4d3ee8b73056892cd21ef68b66feb47a0e4",
+    "build_id": "87a3b4d3ee8b73056892cd21ef68b66feb47a0e4",
+    "capabilities": 1767421,
+    "capability_values": [
+      1767421
+    ],
+    "client_build_number": 681034,
+    "release_channel": "ptb",
+    "built_at": "1795626454431",
+    "first_seen": "2026-11-25T23:37:45.453974+00:00"
+  },
+  {
+    "channel": "canary",
+    "build_number": 681511,
+    "version_hash": "b3d840e8b9baddcbdd52775b5d93378cb8ee1e85",
+    "build_id": "b3d840e8b9baddcbdd52775b5d93378cb8ee1e85",
+    "capabilities": 1767421,
+    "capability_values": [
+      1767421
+    ],
+    "client_build_number": 681511,
+    "release_channel": "canary",
+    "built_at": "1795649118567",
+    "first_seen": "2026-11-25T23:37:45.453974+00:00"
+  }
+]
