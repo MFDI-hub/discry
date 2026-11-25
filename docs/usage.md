@@ -233,8 +233,7 @@ One clock instant is used for the whole run.
 `timestamp_format`.
 
 `timezone` is `UTC`, `GMT`, `Z`, `local`, a numeric offset (`+03:00`,
-`+0300`, `-05:00`), or an IANA name such as `Europe/Istanbul`. IANA names need
-Python 3.9 or newer. On 3.8 use `UTC`, `local`, or a numeric offset.
+`+0300`, `-05:00`), or an IANA name such as `Europe/Istanbul`.
 
 `timestamp_microseconds` defaults to true. Set it false to zero the
 microseconds before formatting. `isoformat()` then omits them.

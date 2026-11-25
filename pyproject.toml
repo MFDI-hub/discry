@@ -11,7 +11,7 @@ authors = [
 ]
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 # Version comes from git tags at build time (see [tool.uv-dynamic-versioning]).
 dynamic = ["version"]
 
@@ -23,8 +23,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -37,9 +35,13 @@ classifiers = [
 ]
 
 dependencies = [
-    "curl-cffi>=0.7.0",
-    "orjson>=3.10.0",
-    # tomllib is in the standard library from 3.11. Older runtimes use tomli.
+    # Floors are the releases that fix the HIGH advisories CI scans for.
+    # Both current lines require Python 3.10 or newer.
+    "curl-cffi>=0.15.0",
+    "orjson>=3.11.6",
+    # zoneinfo has no IANA database on Windows without this package.
+    "tzdata>=2024.1",
+    # tomllib is in the standard library from 3.11. Python 3.10 uses tomli.
     "tomli>=2.0.1; python_version < '3.11'",
 ]
 
@@ -68,8 +70,11 @@ discry = "discry.cli:main"
 # "uv sync --all-extras".
 
 [dependency-groups]
-# Dev tools stay on Python 3.11+. The package itself installs on 3.8+.
+# Dev tools stay on Python 3.11+. The package itself installs on 3.10+.
 dev = [
+    # ty checks the package as Python 3.10, where config files use tomli.
+    # The runtime marker above does not install it into a 3.11+ environment.
+    "tomli>=2.0.1",
     # Lint, format, type check.
     "ruff>=0.17.3; python_version >= '3.11'",
     "ty>=0.0.96; python_version >= '3.11'",
@@ -163,7 +168,7 @@ packages = ["src/discry"]
 # Typically 88 (black standard) or 100 (wide).
 line-length = 100
 # Oldest Python in requires-python: lets ruff modernise code for it (UP rules).
-target-version = "py38"
+target-version = "py310"
 # Also lint docstring code blocks and notebooks once you have them:
 # extend-include = ["*.ipynb"]
 
@@ -229,7 +234,7 @@ docstring-code-format = true
 [tool.ty.environment]
 # Keep in sync with requires-python above; ty would otherwise infer it, but
 # being explicit keeps editors and CI on the same target.
-python-version = "3.8"
+python-version = "3.10"
 
 [tool.ty.src]
 include = ["src", "tests", "devtools", "scripts"]
@@ -334,6 +339,8 @@ extend_exclude = ["devtools", "docs"]
 # Without this list, `deptry .` fails on a brand-new project.
 [tool.deptry.per_rule_ignores]
 DEP002 = [
+    # zoneinfo loads the IANA database from this package. Nothing imports it.
+    "tzdata",
     "pytest",
     "pytest-cov",
     "pytest-xdist",

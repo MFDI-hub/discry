@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, fields
-from typing import TYPE_CHECKING, Any, TypedDict, TypeVar, cast
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, TypedDict
 
 if TYPE_CHECKING:
     from .enums import AssetExtension, GatewayCompress, GatewayEncoding, StrEnum
-
-_Cls = TypeVar("_Cls")
 
 
 class AssetDict(TypedDict):
@@ -135,37 +133,7 @@ def _values(items: tuple[StrEnum, ...]) -> list[str]:
     return [item.value for item in items]
 
 
-def slotted(cls: _Cls) -> _Cls:
-    """
-    Rebuild a dataclass so each instance stores its fields in ``__slots__``.
-
-    ``slots=True`` on ``dataclass`` exists only in Python 3.10 and newer. This
-    rebuild keeps the same layout on 3.8 and 3.9, and instances have no
-    ``__dict__``.
-
-    Parameters:
-        cls (type): Dataclass to rebuild.
-
-    Returns:
-        type: The class, with one slot per field.
-    """
-    class_obj = cast("Any", cls)
-    cls_dict = dict(class_obj.__dict__)
-    field_names = tuple(item.name for item in fields(class_obj))
-    cls_dict["__slots__"] = field_names
-    for name in field_names:
-        cls_dict.pop(name, None)
-    cls_dict.pop("__dict__", None)
-    cls_dict.pop("__weakref__", None)
-    qualname = getattr(class_obj, "__qualname__", None)
-    rebuilt = type(class_obj)(class_obj.__name__, class_obj.__bases__, cls_dict)
-    if qualname is not None:
-        rebuilt.__qualname__ = qualname
-    return cast("_Cls", rebuilt)
-
-
-@slotted
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Asset:
     """
     One content-hashed file linked from the app HTML.
@@ -190,8 +158,7 @@ class Asset:
         return {"name": self.name, "hash": self.content_hash, "ext": self.ext.value}
 
 
-@slotted
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class ClientSurface:
     """
     Values stamped into one Discord web release.

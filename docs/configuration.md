@@ -134,10 +134,9 @@ leaves `output_formats` at `json`.
 | `updated_at_format` | empty | `SCRAPER_UPDATED_AT_FORMAT` | Format for the snapshot `updated_at` |
 | `first_seen_format` | empty | `SCRAPER_FIRST_SEEN_FORMAT` | Format for history `first_seen` |
 
-IANA names such as `Europe/Istanbul` need Python 3.9+. Python 3.8 accepts
-`UTC`, `local`, and numeric offsets. A bad pattern or an unparsable
-`scraped_at` fails validation. See [Usage](usage.md#time) for which field uses
-which format. `built_at` and `last_modified` are not reformatted.
+IANA names such as `Europe/Istanbul` are accepted. A bad pattern or an
+unparsable `scraped_at` fails validation. See [Usage](usage.md#time) for which
+field uses which format. `built_at` and `last_modified` are not reformatted.
 
 ## Fetch
 

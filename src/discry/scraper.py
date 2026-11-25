@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import asyncio
-import functools
 import logging
-import sys
 from datetime import datetime
 from typing import TYPE_CHECKING
 
@@ -31,10 +29,7 @@ async def _in_thread(func, *args):
     Returns:
         object: Whatever ``func`` returns.
     """
-    if sys.version_info >= (3, 9):
-        return await asyncio.to_thread(func, *args)
-    loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(None, functools.partial(func, *args))
+    return await asyncio.to_thread(func, *args)
 
 
 class SurfaceNotFoundError(DiscryError):
@@ -214,7 +209,7 @@ async def scrape_channel(
         inspected += len(batch)
         if len(batch) != len(results):
             raise ValueError("download batch and results differ in length")
-        for path, result in zip(batch, results):
+        for path, result in zip(batch, results, strict=True):
             if isinstance(result, BaseException):
                 logger.warning("Skipping %s: %s", path, result)
                 continue
@@ -305,7 +300,7 @@ async def scrape_channels(
 
         results = list(await asyncio.gather(*(_limited(channel) for channel in channels)))
 
-    for channel, result in zip(channels, results):
+    for channel, result in zip(channels, results, strict=True):
         if isinstance(result, Exception):
             errors.append(f"{channel}: {result}")
         else:

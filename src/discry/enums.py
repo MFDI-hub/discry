@@ -10,8 +10,7 @@ class StrEnum(str, Enum):
     Enum whose members are also strings.
 
     The standard library class arrived in Python 3.11. This one keeps the same
-    behavior on the older versions this package still runs on. Members compare
-    equal to their string values.
+    behavior on Python 3.10. Members compare equal to their string values.
 
     Attributes:
         value (str): Text stored on the member.
