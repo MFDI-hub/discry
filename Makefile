@@ -1,0 +1,83 @@
+# Makefile for easy development workflows.
+# See docs/development.md for docs.
+# Note GitHub Actions call uv directly, not this Makefile.
+# Windows does not include GNU make. Install it (WSL or a port such as
+# Chocolatey) or run the uv commands in docs/development.md. Those commands
+# are what this file wraps.
+
+.DEFAULT_GOAL := default
+
+.PHONY: default install lint test test-random docs docs-build upgrade build clean pre-commit sync sync-once profile security
+
+default: install lint test 
+
+install:
+	# `uv sync` installs the default groups (dev + docs); extras are opt-in.
+	uv sync
+	uv run pre-commit install
+	uv run pre-commit install --hook-type commit-msg
+	uv run pre-commit install --hook-type pre-push
+
+lint:
+	uv run python devtools/lint.py
+
+test:
+	uv run pytest -n auto --cov --cov-report=term-missing
+
+# pytest-randomly already shuffles `make test`. This target prints the seed
+# (pytest header: `Using --randomly-seed=`; -vv is what makes that header show
+# under the -q in addopts) and then repeats with the plugin disabled, which is
+# the deterministic order. Replay a failure with `--randomly-seed=SEED`.
+test-random:
+	uv run pytest -vv
+	uv run pytest -vv -p no:randomly
+
+# Dependency hygiene without the rest of the linters. uv audit reads uv.lock
+# (same command as CI). It is a preview command and needs uv 0.10.8 or newer.
+security:
+	uv run deptry .
+	uv audit --locked --preview-features audit-command
+
+profile:
+	uv run --group profiling py-spy record -o profile.svg -- python -m discord_client_scrapper
+
+docs:
+	uv run mkdocs serve
+
+docs-build:
+	uv run mkdocs build --strict
+
+upgrade:
+	uv lock --upgrade
+	uv sync
+
+build:
+	uv build --no-sources
+
+pre-commit:
+	uv run pre-commit run --all-files
+	uv run pre-commit run --all-files --hook-stage pre-push
+
+# tools-shed (https://github.com/MFDI-hub/tool-shed). The dev group installs it.
+# With no paths, sync_chosen_files reads scripts/chosen_files.txt.
+sync:
+	uv run sync_chosen_files
+
+sync-once:
+	uv run sync_chosen_files --once
+
+clean:
+	-rm -rf dist/
+	-rm -rf site/
+	-rm -rf *.egg-info/
+	-rm -rf .pytest_cache/
+	-rm -rf .mypy_cache/
+	-rm -rf .template-check/
+	-rm -rf profile.svg
+	-rm -rf .ruff_cache/
+	-rm -rf .coverage
+	-rm -rf coverage.xml
+	-rm -rf htmlcov/
+	-rm -rf outputs/
+	-rm -rf .venv/
+	-find . -type d -name "__pycache__" -exec rm -rf {} +
