@@ -321,9 +321,11 @@ The job checks out the repo, installs uv and Python 3.13, runs
 - `data/latest.toml`
 - `data/latest.yaml`
 
-plus `data/history.json`. The commit message is
-`chore: update Discord client surface [skip ci]`. An empty diff does not
-commit.
+plus `data/history.json`. The job pushes branch `scrape/data` and merges a
+pull request into `main`. `protect-main` rejects a direct push, and the
+GitHub Actions app cannot be added to that ruleset on a personal account.
+The commit message is `chore: update Discord client surface [skip ci]`. An
+empty diff does not commit.
 
 A failed scrape opens or comments on an issue labeled `scraper-failure`. A
 later success closes those issues. Other job failures do not open that issue.
