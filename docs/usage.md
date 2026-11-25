@@ -300,7 +300,7 @@ base of that error and of `LatestFetchError`.
 
 ## GitHub
 
-`.github/workflows/scrape.yml` runs at minute 17 of every hour, and when
+`.github/workflows/scrape.yml` runs at minute 23 of every hour, and when
 someone starts it by hand.
 
 The job checks out the repo, installs uv and Python 3.13, runs
