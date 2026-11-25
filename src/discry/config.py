@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import importlib
 import json
 import os
 import re
@@ -12,6 +11,7 @@ from dataclasses import dataclass, field, fields, replace
 from datetime import datetime, timedelta, timezone, tzinfo as dt_tzinfo
 from pathlib import Path
 from typing import Any, Final, get_args
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 if sys.version_info >= (3, 11):
     import tomllib
@@ -27,7 +27,7 @@ from .enums import (
     ScriptKind,
     TruthyText,
 )
-from .models import ClientSurface, slotted
+from .models import ClientSurface
 
 DEFAULT_CONFIG_PATH: Final = Path("config.toml")
 DEFAULT_LATEST_URL: Final = (
@@ -96,8 +96,7 @@ def _impersonation_names() -> frozenset[str]:
     return frozenset(names)
 
 
-@slotted
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Settings:
     """
     Runtime settings for one scrape or snapshot fetch.
@@ -579,8 +578,7 @@ def resolve_timezone(name: str) -> dt_tzinfo:
         datetime.tzinfo: Timezone used for new timestamps.
 
     Raises:
-        ValueError: ``name`` is empty or unknown. IANA names on Python 3.8
-            raise this error.
+        ValueError: ``name`` is empty or unknown.
     """
     text = name.strip()
     if text.upper() in {"UTC", "Z", "GMT"}:
@@ -594,14 +592,8 @@ def resolve_timezone(name: str) -> dt_tzinfo:
             timedelta(hours=sign * int(match.group(2)), minutes=sign * int(match.group(3)))
         )
     try:
-        zoneinfo = importlib.import_module("zoneinfo")
-    except ImportError as exc:
-        raise ValueError(
-            f"Timezone {name!r} needs Python 3.9+ or a numeric offset such as +03:00"
-        ) from exc
-    try:
-        return zoneinfo.ZoneInfo(text)
-    except Exception as exc:
+        return ZoneInfo(text)
+    except ZoneInfoNotFoundError as exc:
         raise ValueError(f"Unknown timezone {name!r}") from exc
 
 

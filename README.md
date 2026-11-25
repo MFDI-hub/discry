@@ -35,7 +35,7 @@ latest = fetch_latest()
 print(latest["stable"].build_number, latest["stable"].capabilities)
 ```
 
-The package runs on Python 3.8 or newer. A full development install, including
+The package runs on Python 3.10 or newer. A full development install, including
 the docs, needs Python 3.11 or newer.
 
 ## Files
@@ -89,7 +89,7 @@ still has a branch, `capability_values` keeps every mask from that branch.
 `built_at` is stored as Discord sent it. `last_modified` is the raw HTTP date.
 `scraped_at`, `updated_at`, and `first_seen` share one clock. The default is
 `datetime.now(timezone.utc).isoformat()`, including microseconds. `timezone`
-accepts `UTC`, `local`, `+HH:MM`, or an IANA name on Python 3.9+.
+accepts `UTC`, `local`, `+HH:MM`, or an IANA name.
 `timestamp_format` is `iso` or a `strftime` pattern. `scraped_at_format`,
 `updated_at_format`, and `first_seen_format` override it per field.
 `--scraped-at` or `scraped_at` in the config pins the instant.

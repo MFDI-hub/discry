@@ -6,7 +6,7 @@ This project is set up to use [uv](https://docs.astral.sh/uv/) to manage Python 
 dependencies. First, be sure you
 [have uv installed](https://docs.astral.sh/uv/getting-started/installation/).
 
-The package itself imports on Python 3.8 or newer. `make install`, pytest,
+The package itself imports on Python 3.10 or newer. `make install`, pytest,
 ruff, ty, and mkdocs need Python 3.11 or newer. `uv python install 3.13` is
 the version the docs and CI dev job use.
 

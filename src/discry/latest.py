@@ -13,7 +13,7 @@ from .config import DEFAULT_LATEST_URL as DEFAULT_LATEST_URL, Settings
 from .enums import AssetExtension, GatewayCompress, GatewayEncoding, StrEnum
 from .errors import DiscryError
 from .http_client import request_get
-from .models import Asset, ClientSurface, slotted
+from .models import Asset, ClientSurface
 
 logger = logging.getLogger(__name__)
 
@@ -31,8 +31,7 @@ class LatestFetchError(DiscryError):
     __slots__ = ()
 
 
-@slotted
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class LatestSurfaces:
     """
     Channels from one published ``latest.json``.

@@ -48,7 +48,7 @@ columns are `channel`, `build_number`, `version_hash`, `build_id`,
 
 ## Pages
 
-- [Installation](installation.md) covers Python 3.8+ for the package and 3.11+ for development.
+- [Installation](installation.md) covers Python 3.10+ for the package and 3.11+ for development.
 - [Usage](usage.md) covers a scrape, the files, the clock, `--from-repo`, and GitHub.
 - [Configuration](configuration.md) lists every setting, its default, its environment variable, and the CLI flags.
 - [API reference](reference/discry/index.md) is generated from the docstrings, one page per module.
