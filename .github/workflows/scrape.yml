@@ -12,6 +12,7 @@ concurrency:
 permissions:
   contents: write
   issues: write
+  pull-requests: write
 
 jobs:
   scrape:
@@ -39,18 +40,34 @@ jobs:
           SCRAPER_LATEST_FORMATS: json,md,csv,toml,yaml
         run: uv run discry
 
+      # protect-main requires a pull request. The GitHub Actions app cannot be
+      # added as a bypass actor on a personal repository, so this job pushes
+      # scrape/data and merges that pull request.
       - name: Commit updated data
         if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B scrape/data
           git add data/latest.json data/latest.md data/latest.csv data/latest.toml data/latest.yaml data/history.json
           if git diff --staged --quiet; then
             echo "No data changes"
-          else
-            git commit -m "chore: update Discord client surface [skip ci]"
-            git push
+            exit 0
           fi
+          git commit -m "chore: update Discord client surface [skip ci]"
+          git push --force-with-lease -u origin HEAD
+          existing="$(gh pr list --head scrape/data --base main --state open --json number --jq '.[0].number')"
+          if [ -z "${existing}" ]; then
+            gh pr create --base main --head scrape/data \
+              --title "Update Discord client surface" \
+              --body "Hourly scrape of the public web client."
+          fi
+          gh pr merge scrape/data --merge --delete-branch \
+            --subject "chore: update Discord client surface [skip ci]" \
+            --body "Hourly scrape of the public web client."
 
       - name: Close scraper-failure issue
         if: success()
