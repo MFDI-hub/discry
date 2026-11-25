@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in contributing to **discord_client_scrapper**!
+Thanks for your interest in contributing to **discry**!
 
 ## Getting started
 

@@ -54,30 +54,19 @@ for Copier usage and repo layout.
 
    - If needed, update your `pyproject.toml` with the correct name.
 
-3. **Authorize** your repository to publish to PyPI:
+3. **Add the API tokens** as repository Actions secrets
+   (**Settings → Secrets and variables → Actions**):
 
-   - In the GitHub repo, create an Environment named `pypi`
-     (**Settings → Environments → New environment**). Optional: add required
-     reviewers so a publish waits for approval. The name has to match the
-     `environment:` key in `publish.yml`.
+   - `PYPI_API_TOKEN`, from [pypi.org/manage/account/token/](https://pypi.org/manage/account/token/).
+   - `TEST_PYPI_API_TOKEN`, from
+     [test.pypi.org/manage/account/token/](https://test.pypi.org/manage/account/token/).
 
-   - Go to [the publishing settings page](https://pypi.org/manage/account/publishing/).
+   `publish.yml` reads those names. A run that targets TestPyPI uploads to
+   `https://test.pypi.org/legacy/` and does not touch production PyPI.
 
-   - Find “Trusted Publisher Management” and register your GitHub repo as a new
-     “pending” trusted publisher.
-
-   - Enter the project name, repo owner, repo name, workflow filename
-     `publish.yml`, and environment name `pypi`.
-
-     The workflow filename is `publish.yml`, including for automatic releases.
-     `release.yml` only dispatches it. PyPI does not accept a reusable workflow
-     as the trusted publisher, so the publish job stays in `publish.yml`.
-
-   - **TestPyPI (optional).** Repeat the trusted-publisher step on
-     [test.pypi.org](https://test.pypi.org/manage/account/publishing/) and create
-     a GitHub Environment named `testpypi`. Then use **Run workflow** on
-     `publish.yml` and choose `testpypi`. That run uploads to
-     `https://test.pypi.org/legacy/` and does not touch production PyPI.
+   The job also selects a GitHub Environment named `pypi` or `testpypi`.
+   Create one (**Settings → Environments**) only when you want required
+   reviewers to hold a publish. The secret names stay on the repository.
 
 4. **Create a first release** so versioning starts on `0.x` (optional but recommended):
 
@@ -103,14 +92,8 @@ for Copier usage and repo layout.
 
 `publish.yml` tests the tree, builds with `uv build --no-sources` (so the wheel
 does not depend on a local path), imports the package from that wheel, then
-uploads with `uv publish --trusted-publishing always`.
-
-`uv publish` uploads attestation files that are already next to the artifacts.
-It does not generate them. PyPI provenance therefore stays absent unless you add
-a generation step (for example `actions/attest-build-provenance`) or switch the
-upload to `pypa/gh-action-pypi-publish`, which can attest as it publishes. The
-trusted-publisher workflow filename would still be `publish.yml` if that step
-lives in this file.
+uploads with `uv publish --token`, using `PYPI_API_TOKEN` or
+`TEST_PYPI_API_TOKEN`.
 
 ### Publishing Subsequent Releases
 

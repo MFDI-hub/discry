@@ -6,8 +6,12 @@ This project is set up to use [uv](https://docs.astral.sh/uv/) to manage Python 
 dependencies. First, be sure you
 [have uv installed](https://docs.astral.sh/uv/getting-started/installation/).
 
+The package itself imports on Python 3.8 or newer. `make install`, pytest,
+ruff, ty, and mkdocs need Python 3.11 or newer. `uv python install 3.13` is
+the version the docs and CI dev job use.
+
 Then
-[fork the MFDI-hub/discord_client_scrapper repo](https://github.com/MFDI-hub/discord_client_scrapper/fork)
+[fork the MFDI-hub/discry repo](https://github.com/MFDI-hub/discry/fork)
 (having your own fork will make it easier to contribute) and
 [clone it](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
 
@@ -46,6 +50,9 @@ make pre-commit
 
 # Preview documentation locally (MkDocs + Material):
 make docs
+
+# The API section is not a hand-written page. mkdocs-api-autonav builds one
+# page per module from the docstrings on `uv run mkdocs build`.
 
 # Delete all the build artifacts:
 make clean
@@ -125,7 +132,7 @@ uv run sync_chosen_files --once
 uv run sync_chosen_files
 
 # Custom paths or output file:
-uv run sync_chosen_files --dir src/discord_client_scrapper --out outputs/builds/source_dump.txt --once
+uv run sync_chosen_files --dir src/discry --out outputs/builds/source_dump.txt --once
 uv run sync_chosen_files --file-list scripts/chosen_files.txt --ext py,toml --once
 ```
 
@@ -220,8 +227,8 @@ for item in tqdm(range(10)):
 Profiling tools are an opt-in group, so they never slow a normal setup:
 
 ```shell
-uv run --group profiling py-spy record -o profile.svg -- python -m discord_client_scrapper
-uv run python -m cProfile -o out.prof -m discord_client_scrapper
+uv run --group profiling py-spy record -o profile.svg -- python -m discry
+uv run python -m cProfile -o out.prof -m discry
 uv run --group profiling snakeviz out.prof
 ```
 
@@ -233,6 +240,7 @@ uv sync --group property-testing
 
 ```python
 from hypothesis import given, strategies as st
+
 
 @given(st.lists(st.integers()))
 def test_roundtrip(values: list[int]) -> None:

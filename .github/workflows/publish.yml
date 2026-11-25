@@ -4,9 +4,10 @@ name: Publish to PyPI
 # A GITHUB_TOKEN release does not fire `release: published` (see release.yml).
 # Manual GitHub Releases do fire that event, which is the other entry point.
 #
-# Trusted publishing is registered against THIS file (`publish.yml`) and the
-# GitHub Environment named below. PyPI does not accept a reusable workflow
-# as the trusted publisher. https://docs.pypi.org/trusted-publishers/troubleshooting/
+# API tokens live in repository Actions secrets:
+#   PYPI_API_TOKEN
+#   TEST_PYPI_API_TOKEN
+# The GitHub Environment named below can still hold required reviewers.
 
 on:
   release:
@@ -26,11 +27,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     # Create a GitHub Environment with this name. Required reviewers on it
-    # hold the publish until someone approves. TestPyPI is a separate
-    # environment and a separate trusted publisher on test.pypi.org.
+    # hold the publish until someone approves. Tokens are repository secrets.
     environment: ${{ github.event.inputs.repository == 'testpypi' && 'testpypi' || 'pypi' }}
     permissions:
-      id-token: write # Mandatory for OIDC.
       contents: read
     steps:
       - name: Checkout (official GitHub action)
@@ -87,12 +86,12 @@ jobs:
       - name: Publish to PyPI
         env:
           PUBLISH_TARGET: ${{ github.event.inputs.repository || 'pypi' }}
+          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+          TEST_PYPI_API_TOKEN: ${{ secrets.TEST_PYPI_API_TOKEN }}
         run: |
           set -euo pipefail
           if [ "${PUBLISH_TARGET}" = "testpypi" ]; then
-            uv publish --trusted-publishing always --publish-url https://test.pypi.org/legacy/
+            uv publish --token "${TEST_PYPI_API_TOKEN}" --publish-url https://test.pypi.org/legacy/
           else
-            uv publish --trusted-publishing always
+            uv publish --token "${PYPI_API_TOKEN}"
           fi
-          # uv publish uploads attestation files that already sit next to the
-          # artifacts. It does not generate them. See docs/publishing.md.

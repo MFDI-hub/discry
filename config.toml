@@ -1,0 +1,83 @@
+# Discord client surface scraper.
+# Priority: CLI flags > environment variables > this file > defaults.
+
+# curl_cffi browser profile. Aliases such as chrome, edge, safari, firefox.
+impersonate = "chrome"
+
+# Optional proxy URL, for example "socks5://user:pass@host:port".
+# proxy = ""
+
+timeout = 30
+verify = true
+channels = ["stable", "ptb", "canary"]
+data_dir = "data"
+max_files = 40
+download_concurrency = 8
+
+# Leave unset to download /assets/ from the channel host
+# (discord.com, ptb.discord.com, canary.discord.com).
+# asset_base_url = "https://discord.com"
+
+# [headers]
+# Accept-Language = "en-US,en;q=0.9"
+
+# [domains]
+# stable = "discord.com"
+# ptb = "ptb.discord.com"
+# canary = "canary.discord.com"
+# staging = "staging.discord.com"
+# domains_replace = false
+
+# output_formats = ["json"]
+# latest_formats = ["json", "md", "csv", "toml", "yaml"]
+# json_indent = 2
+# json_sort_keys = false
+# json_trailing_newline = true
+# latest_filename = "latest"
+# history_filename = "history"
+# write_output = true
+# write_on_fetch = false
+# drop_nulls = false
+
+# timezone = "UTC"
+# timestamp_format = "iso"
+# timestamp_microseconds = true
+# scraped_at_format = ""
+# updated_at_format = ""
+# first_seen_format = ""
+
+# url_scheme = "https"
+# app_path = "/app"
+# asset_prefix = "/assets/"
+# retries = 0
+# retry_backoff = 0
+# max_redirects = 30
+# channel_concurrency = 1
+# continue_on_error = false
+
+# script_extensions = ["js"]
+# identity_match = "any"
+# max_env_chars = 200000
+# hash_min_length = 7
+# hash_max_length = 64
+# asset_hash_min_length = 8
+# asset_hash_max_length = 40
+# capability_literal_min_digits = 3
+# capability_literal_max_digits = 10
+# capability_ternary_min_digits = 4
+# capability_ternary_max_digits = 10
+# build_number_min_digits = 4
+# release_channel_separator = "-"
+# release_channel_case = "lower"
+# build_id_header = "x-build-id"
+# last_modified_header = "last-modified"
+
+# latest_url = "https://raw.githubusercontent.com/MFDI-hub/discry/main/data/latest.json"
+# from_repo = false
+# log_level = "INFO"
+# log_format = "%(levelname)s %(name)s: %(message)s"
+
+# Field lists, script_priority, empty_values, env_markers, asset_extensions,
+# headers, cookies, and curl_options use the built-in defaults until set.
+# Environment variables use SCRAPER_ plus the upper-case field name.
+# download_concurrency stays SCRAPER_CONCURRENCY. Tables are JSON objects.

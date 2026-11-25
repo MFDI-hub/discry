@@ -6,5 +6,5 @@ package_author_email: mfdisanchez@gmail.com
 package_author_name: mfdi
 package_description: Scrape Discord web client bootstrap values
 package_github_org: MFDI-hub
-package_module: discord_client_scrapper
-package_name: discord_client_scrapper
+package_module: discry
+package_name: discry
