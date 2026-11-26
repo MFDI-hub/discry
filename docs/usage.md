@@ -76,6 +76,8 @@ The remaining, non-priority scripts are added only when any name in
 Downloading stops when every name in `stop_fields` is set (`build_number` and
 `capabilities`) and either every name in `stop_early_fields` is set
 (`client_build_number`) or the priority scripts have already been fetched.
+With `save_client` (the default), scripts linked from the page are still
+downloaded after that stop, up to `max_files`, so the client code can be saved.
 
 `channel_concurrency` is `1`, so channels run one after another. Raising it
 fetches several channels at once and still returns them in request order.
@@ -138,7 +140,10 @@ and `output_formats = ["json"]`.
 | File | When it is written | Contents |
 | --- | --- | --- |
 | `data/latest.json` | Every scrape, and a fetch when `write_on_fetch` is true | Current snapshot |
-| `data/history.json` | Same runs. Also written when `json` is not an output format, because it is the append log | One object per observed build |
+| `data/history.json` | Same runs. Also written when `json` is not an output format, because it is the append log | One object per observed build in the open file |
+| `data/history-YYYY-MM-DDTHH-MM-SSZ.json` | The open log reaches `history_rotate_bytes` (95 MB) | The closed part of the same log |
+| `data/client/<channel>/app.html` | `save_client` is true | The app page for that channel |
+| `data/client/<channel>/<name>.js` | Same runs | A script linked from that page. The content hash is removed from the file name |
 | `data/latest.md` | `md` is in `latest_formats`, or in `output_formats` when `latest_formats` is empty | Snapshot as Markdown tables |
 | `data/latest.csv` | `csv` selected the same way | One row per channel. Nested values are JSON strings |
 | `data/latest.toml` | `toml` selected the same way | Snapshot as TOML tables. Nulls are empty strings |
@@ -216,7 +221,33 @@ row. `first_seen` is.
 
 The history log is always read from `{history_dir}/{history_filename}.json`
 before new rows are merged, including when the history output format is not
-JSON.
+JSON. Closed files `{history_filename}-*.json` in that directory are read for
+their keys only, so a build already stored there is not written again.
+
+At `history_rotate_bytes` (95 MB by default), the open file is renamed to
+`{history_filename}-YYYY-MM-DDTHH-MM-SSZ.json` using the UTC time of that
+change. The same stamp is used for the other history formats. New rows
+continue in a new `{history_filename}.json`. A second close in the same
+second is named `...Z-2`. This stays under GitHub's 100 MB file limit. A
+single row that is already larger than the limit is still written.
+
+### Client code
+
+`save_client` writes the app page and the scripts it links under `data/client`.
+The default directory is `data/client`. `client_dir` replaces it.
+
+```text
+data/client/stable/app.html
+data/client/stable/web.js
+data/client/stable/fast-connect.js
+data/client/ptb/app.html
+data/client/canary/app.html
+```
+
+`/assets/web.<hash>.js` is stored as `web.js`. The same path is used for the
+next build, and the file is rewritten only when the body changed. A script
+the page no longer links is deleted. `--from-repo` does not write this tree.
+`save_client = false` skips the extra downloads and the directory.
 
 ## Time
 
@@ -324,8 +355,10 @@ installing them again. The environment is:
 - `data/latest.toml`
 - `data/latest.yaml`
 
-plus `data/history.json`. The job pushes branch `scrape/data` and merges a
-pull request into `main`. `protect-main` rejects a direct push, and the
+plus `data/history.json` and `data/client/`. When the log rolls over, the job
+also commits `data/history-YYYY-MM-DDTHH-MM-SSZ.json`. The job pushes branch
+`scrape/data` and merges a pull request into `main`. `protect-main` rejects a
+direct push, and the
 GitHub Actions app cannot be added to that ruleset on a personal account.
 The commit message is `chore: update Discord client surface [skip ci]`. An
 empty diff does not commit.

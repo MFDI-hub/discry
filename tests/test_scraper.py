@@ -42,6 +42,8 @@ def test_scrape_channel_reads_html_then_entry_script(monkeypatch: pytest.MonkeyP
                 "capabilities:1767421,properties:{};"
                 'isNaN(I=parseInt("10012",10))||(s.client_build_number=I)'
             )
+        if url.endswith("111.abcdefabcdefabcd.js"):
+            return Response("/* chunk */")
         raise AssertionError(url)
 
     monkeypatch.setattr("discry.scraper.request_get", fake_get)
@@ -58,6 +60,7 @@ def test_scrape_channel_reads_html_then_entry_script(monkeypatch: pytest.MonkeyP
     assert seen == [
         "https://discord.com/app",
         "https://discord.com/assets/fast-connect.0123456789abcdef.js",
+        "https://discord.com/assets/111.abcdefabcdefabcd.js",
     ]
 
 

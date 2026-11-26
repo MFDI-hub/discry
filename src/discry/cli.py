@@ -11,11 +11,12 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Any
 
+from .client_code import write_client_files
 from .config import DEFAULT_LOG_FORMAT, load_settings, resolve_moment
 from .enums import ExitCode
 from .history import write_data_files
 from .latest import fetch_latest
-from .scraper import scrape_channels
+from .scraper import capture_channels
 
 logger = logging.getLogger(__name__)
 
@@ -178,14 +179,16 @@ def main(argv: list[str] | None = None) -> ExitCode:
             settings.impersonate,
         )
         try:
-            surfaces = asyncio.run(scrape_channels(settings=settings, scraped_at=moment))
+            captures = asyncio.run(capture_channels(settings=settings, scraped_at=moment))
         except Exception as exc:
             logger.error("Scrape failed: %s", exc)
             return ExitCode.FAILURE
+        surfaces = [item.surface for item in captures]
         if settings.write_output:
             write_data_files(
                 Path(settings.data_dir), surfaces, scraped_at=moment, settings=settings
             )
+            write_client_files(Path(settings.data_dir), captures, settings)
 
     for surface in surfaces:
         logger.info(

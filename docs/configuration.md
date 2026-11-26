@@ -84,6 +84,9 @@ There is no flag that turns `from_repo` or `write_on_fetch` back off. Use
 | `history_filename` | `history` | `SCRAPER_HISTORY_FILENAME` | History file stem |
 | `latest_dir` | unset | `SCRAPER_LATEST_DIR` | Snapshot directory. Unset uses `data_dir` |
 | `history_dir` | unset | `SCRAPER_HISTORY_DIR` | History directory. Unset uses `data_dir` |
+| `history_rotate_bytes` | `95000000` | `SCRAPER_HISTORY_ROTATE_BYTES` | Close the open history file at this size. The closed file is renamed with the UTC time, and new rows continue in a new file |
+| `save_client` | `true` | `SCRAPER_SAVE_CLIENT` | Save the app page and its scripts under `data/client`, and replace a file when its body changes |
+| `client_dir` | unset | `SCRAPER_CLIENT_DIR` | Directory for that copy. Unset uses `data/client` |
 | `data_dir` | `data` | `SCRAPER_DATA_DIR` | Directory used when a specific directory is unset |
 | `write_output` | `true` | `SCRAPER_WRITE_OUTPUT` | Write files after a scrape |
 | `write_on_fetch` | `false` | `SCRAPER_WRITE_ON_FETCH` | Write files after `--from-repo` |

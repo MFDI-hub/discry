@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+import orjson
+
 from discry.config import Settings
 from discry.history import history_key, merge_history, write_data_files
 from discry.models import ClientSurface
@@ -72,3 +74,31 @@ def test_extra_formats_and_timestamp_pattern(tmp_path) -> None:
     assert "20260102" in (tmp_path / "latest.md").read_text(encoding="utf-8")
     assert "stable" in (tmp_path / "history.csv").read_text(encoding="utf-8")
     assert b"20260102" in (tmp_path / "latest.json").read_bytes()
+
+
+def test_history_rolls_to_a_timestamped_file(tmp_path) -> None:
+    first = datetime(2026, 1, 2, 3, 4, 5, tzinfo=timezone.utc)
+    settings = Settings(output_formats=("json", "md")).validate()
+    write_data_files(tmp_path, [_surface(1)], scraped_at=first, settings=settings)
+    largest = max(
+        path.stat().st_size for path in (tmp_path / "history.json", tmp_path / "history.md")
+    )
+    tight = Settings(history_rotate_bytes=largest + 1, output_formats=("json", "md")).validate()
+    closed_at = datetime(2026, 6, 7, 8, 9, 10, tzinfo=timezone.utc)
+    write_data_files(tmp_path, [_surface(2)], scraped_at=closed_at, settings=tight)
+
+    archives = sorted(tmp_path.glob("history-*.json"))
+    assert [path.name for path in archives] == ["history-2026-06-07T08-09-10Z.json"]
+    old = orjson.loads(archives[0].read_bytes())
+    current = orjson.loads((tmp_path / "history.json").read_bytes())
+    assert [row["build_number"] for row in old] == [1]
+    assert [row["build_number"] for row in current] == [2]
+    assert "| build_number | 1 |" in (tmp_path / "history-2026-06-07T08-09-10Z.md").read_text(
+        encoding="utf-8"
+    )
+    assert "| build_number | 2 |" in (tmp_path / "history.md").read_text(encoding="utf-8")
+
+    write_data_files(tmp_path, [_surface(1), _surface(2)], scraped_at=closed_at, settings=tight)
+    current = orjson.loads((tmp_path / "history.json").read_bytes())
+    assert [row["build_number"] for row in current] == [2]
+    assert len(list(tmp_path.glob("history-*.json"))) == 1

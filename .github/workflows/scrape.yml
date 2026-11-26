@@ -56,6 +56,16 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B scrape/data
           git add data/latest.json data/latest.md data/latest.csv data/latest.toml data/latest.yaml data/history.json
+          if [ -d data/client ]; then
+            git add -A -- data/client
+          fi
+          # A log near 100 MB is renamed history-YYYY-MM-DDTHH-MM-SSZ.json.
+          # The open file stays data/history.json.
+          shopt -s nullglob
+          archives=(data/history-*.json data/history-*.md data/history-*.csv data/history-*.toml data/history-*.yaml)
+          if ((${#archives[@]})); then
+            git add -- "${archives[@]}"
+          fi
           if git diff --staged --quiet; then
             echo "No data changes"
             exit 0

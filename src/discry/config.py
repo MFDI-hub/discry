@@ -64,6 +64,9 @@ DEFAULT_HISTORY_KEY_FIELDS: Final[tuple[str, ...]] = (
     "version_hash",
     "capabilities",
 )
+# Stay under GitHub's 100 MB file limit. The open log rolls to a timestamped
+# file before a write would reach this size.
+DEFAULT_HISTORY_ROTATE_BYTES: Final = 95_000_000
 DEFAULT_SCRIPT_PRIORITY: Final[tuple[str, ...]] = tuple(member.value for member in ScriptKind)
 DEFAULT_ASSET_EXTENSIONS: Final[tuple[str, ...]] = tuple(member.value for member in AssetExtension)
 DEFAULT_ENV_MARKERS: Final[tuple[str, ...]] = tuple(member.value for member in EnvMarker)
@@ -129,6 +132,13 @@ class Settings:
         history_filename (str): File stem for the history log.
         latest_dir (str | None): Snapshot directory. None uses ``data_dir``.
         history_dir (str | None): History directory. None uses ``data_dir``.
+        history_rotate_bytes (int): Close the open history file when a write
+            would reach this size. The closed file is renamed with the UTC
+            time of the change, and later rows continue in a new file.
+        save_client (bool): Save the app page and its scripts under
+            ``data/client`` when true.
+        client_dir (str | None): Directory for that copy. None uses
+            ``data_dir / client``.
         write_output (bool): Write files after a scrape when true.
         write_on_fetch (bool): Write files after ``--from-repo`` when true.
         latest_fields (tuple[str, ...]): Surface fields stored in the snapshot.
@@ -225,6 +235,9 @@ class Settings:
     history_filename: str = "history"
     latest_dir: str | None = None
     history_dir: str | None = None
+    history_rotate_bytes: int = DEFAULT_HISTORY_ROTATE_BYTES
+    save_client: bool = True
+    client_dir: str | None = None
     write_output: bool = True
     write_on_fetch: bool = False
     latest_fields: tuple[str, ...] = DEFAULT_LATEST_FIELDS
@@ -363,6 +376,8 @@ class Settings:
             raise ValueError(f"Unknown latest format(s): {', '.join(unknown_latest)}")
         if not self.latest_filename.strip() or not self.history_filename.strip():
             raise ValueError("latest_filename and history_filename must not be empty")
+        if self.history_rotate_bytes < 1:
+            raise ValueError("history_rotate_bytes must be at least 1")
         if self.max_files < 1:
             raise ValueError("max_files must be at least 1")
         if self.download_concurrency < 1:
@@ -494,6 +509,7 @@ for _name in (
     "asset_base_url",
     "latest_dir",
     "history_dir",
+    "client_dir",
     "http_proxy",
     "https_proxy",
     "no_proxy",
@@ -523,6 +539,7 @@ for _name in (
     "capability_ternary_min_digits",
     "capability_ternary_max_digits",
     "build_number_min_digits",
+    "history_rotate_bytes",
 ):
     _kind(_name, "int")
 for _name in (
@@ -531,6 +548,7 @@ for _name in (
     "json_trailing_newline",
     "write_output",
     "write_on_fetch",
+    "save_client",
     "drop_nulls",
     "timestamp_microseconds",
     "continue_on_error",

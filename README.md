@@ -64,7 +64,11 @@ new.
 The hourly GitHub workflow sets `SCRAPER_LATEST_FORMATS` to
 `json,md,csv,toml,yaml` and leaves history as `data/history.json`. It commits
 `data/latest.json`, `data/latest.md`, `data/latest.csv`, `data/latest.toml`,
-`data/latest.yaml`, and `data/history.json`.
+`data/latest.yaml`, and `data/history.json`. At 95 MB the open log is renamed
+`data/history-YYYY-MM-DDTHH-MM-SSZ.json` and a new `data/history.json`
+continues it. That archive is committed too. The same run saves the app page
+and its scripts under `data/client/<channel>/` and replaces a file when the
+body changes.
 
 `--from-repo` fetches the published `latest.json` and does not write files
 unless `--write-on-fetch` or `write_on_fetch = true`.
