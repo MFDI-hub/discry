@@ -68,5 +68,33 @@
     "release_channel": "canary",
     "built_at": "1795665989118",
     "first_seen": "2026-11-26T05:10:06.648030+00:00"
+  },
+  {
+    "channel": "ptb",
+    "build_number": 681625,
+    "version_hash": "1e10484a8f3482c91e53bc10c48352ac95243cb4",
+    "build_id": "1e10484a8f3482c91e53bc10c48352ac95243cb4",
+    "capabilities": 1767421,
+    "capability_values": [
+      1767421
+    ],
+    "client_build_number": 681625,
+    "release_channel": "ptb",
+    "built_at": "1795681177399",
+    "first_seen": "2026-11-26T15:24:26.189520+00:00"
+  },
+  {
+    "channel": "canary",
+    "build_number": 681673,
+    "version_hash": "0f679c439c71c03f0f0905b5eacac8b5f2b19399",
+    "build_id": "0f679c439c71c03f0f0905b5eacac8b5f2b19399",
+    "capabilities": 1767421,
+    "capability_values": [
+      1767421
+    ],
+    "client_build_number": 681673,
+    "release_channel": "canary",
+    "built_at": "1795705500327",
+    "first_seen": "2026-11-26T15:24:26.189520+00:00"
   }
 ]
