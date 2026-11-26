@@ -1,4 +1,4 @@
-updated_at = "2026-11-25T23:37:45.453974+00:00"
+updated_at = "2026-11-26T00:37:03.322737+00:00"
 
 [channels]
 
@@ -30,7 +30,7 @@ braintree_key = "production_ktzp8hfp_49pp2rp4phym7387"
 capabilities = 1767421
 capability_values = [1767421]
 client_build_number = 681034
-scraped_at = "2026-11-25T23:37:45.453974+00:00"
+scraped_at = "2026-11-26T00:37:03.322737+00:00"
 
 [[channels.stable.assets]]
 name = "web"
@@ -3530,7 +3530,7 @@ braintree_key = "production_ktzp8hfp_49pp2rp4phym7387"
 capabilities = 1767421
 capability_values = [1767421]
 client_build_number = 681034
-scraped_at = "2026-11-25T23:37:45.453974+00:00"
+scraped_at = "2026-11-26T00:37:03.322737+00:00"
 
 [[channels.ptb.assets]]
 name = "web"
@@ -7003,11 +7003,11 @@ hash = "8ea992ea8347e7c0"
 ext = "css"
 
 [channels.canary]
-build_number = 681511
-version_hash = "b3d840e8b9baddcbdd52775b5d93378cb8ee1e85"
-build_id = "b3d840e8b9baddcbdd52775b5d93378cb8ee1e85"
-built_at = "1795649118567"
-last_modified = "Wed, 25 Nov 2026 23:28:33 GMT"
+build_number = 681548
+version_hash = "5e770132f646ce8c6fb1c6c64c35340a7eefdd67"
+build_id = "5e770132f646ce8c6fb1c6c64c35340a7eefdd67"
+built_at = "1795652797983"
+last_modified = "Thu, 26 Nov 2026 00:29:47 GMT"
 release_channel = "canary"
 api_version = 9
 gateway_endpoint = "wss://gateway.discord.gg"
@@ -7029,12 +7029,12 @@ adyen_key = "live_E3OQ33V6GVGTXOVQZEAFQJ6DJIDVG6SY"
 braintree_key = "production_ktzp8hfp_49pp2rp4phym7387"
 capabilities = 1767421
 capability_values = [1767421]
-client_build_number = 681511
-scraped_at = "2026-11-25T23:37:45.453974+00:00"
+client_build_number = 681548
+scraped_at = "2026-11-26T00:37:03.322737+00:00"
 
 [[channels.canary.assets]]
 name = "web"
-hash = "4f8462e638798f3e"
+hash = "5b1d5f31b37956d1"
 ext = "js"
 
 [[channels.canary.assets]]
@@ -8123,8 +8123,8 @@ hash = "ff76e86da47e6065"
 ext = "js"
 
 [[channels.canary.assets]]
-name = "251400"
-hash = "ebb20281f06bd6d2"
+name = "398384"
+hash = "a302e6e82ec01949"
 ext = "js"
 
 [[channels.canary.assets]]
@@ -8789,7 +8789,7 @@ ext = "js"
 
 [[channels.canary.assets]]
 name = "sentry"
-hash = "2ccb50013ded9ba6"
+hash = "8e8d434b1602770e"
 ext = "js"
 
 [[channels.canary.assets]]
@@ -8804,7 +8804,7 @@ ext = "js"
 
 [[channels.canary.assets]]
 name = "fast-connect"
-hash = "37cc53a88fb4082c"
+hash = "b20f8213cef53b4e"
 ext = "js"
 
 [[channels.canary.assets]]
@@ -9528,8 +9528,8 @@ hash = "c6a9beab4ec4bb8a"
 ext = "css"
 
 [[channels.canary.assets]]
-name = "251400"
-hash = "f8626c6d53dcc48a"
+name = "398384"
+hash = "3d12658413d943f8"
 ext = "css"
 
 [[channels.canary.assets]]
