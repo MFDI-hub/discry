@@ -304,13 +304,16 @@ base of that error and of `LatestFetchError`.
 someone starts it by hand.
 
 The job checks out the repo, installs uv and Python 3.13, runs
-`uv sync --locked --no-dev`, then `uv run discry` with:
+`uv sync --locked --no-default-groups`, then `uv run --no-sync discry`.
+The sync skips the dev and docs groups. `--no-sync` keeps `uv run` from
+installing them again. The environment is:
 
 | Variable | Source |
 | --- | --- |
 | `SCRAPER_PROXY` | Actions secret `SCRAPER_PROXY` |
 | `SCRAPER_IMPERSONATE` | Actions variable `SCRAPER_IMPERSONATE` |
 | `SCRAPER_LATEST_FORMATS` | `json,md,csv,toml,yaml` |
+| `SCRAPER_CHANNEL_CONCURRENCY` | `3` |
 
 `output_formats` stays the default `json`, so the history log stays
 `data/history.json`. The snapshot is committed as:

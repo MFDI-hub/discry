@@ -29,8 +29,10 @@ jobs:
           enable-cache: true
           python-version: "3.13"
 
+      # Default groups are dev and docs. Installing them here makes `uv run`
+      # download them again during the scrape step.
       - name: Install dependencies
-        run: uv sync --locked --no-dev
+        run: uv sync --locked --no-default-groups
 
       - name: Scrape Discord client surface
         id: scrape
@@ -38,7 +40,8 @@ jobs:
           SCRAPER_PROXY: ${{ secrets.SCRAPER_PROXY }}
           SCRAPER_IMPERSONATE: ${{ vars.SCRAPER_IMPERSONATE }}
           SCRAPER_LATEST_FORMATS: json,md,csv,toml,yaml
-        run: uv run discry
+          SCRAPER_CHANNEL_CONCURRENCY: "3"
+        run: uv run --no-sync discry
 
       # protect-main requires a pull request. The GitHub Actions app cannot be
       # added as a bypass actor on a personal repository, so this job pushes
@@ -59,11 +62,16 @@ jobs:
           fi
           git commit -m "chore: update Discord client surface [skip ci]"
           git push --force -u origin HEAD
-          existing="$(gh pr list --head scrape/data --base main --state open --json number --jq '.[0].number')"
-          if [ -z "${existing}" ]; then
-            gh pr create --base main --head scrape/data \
-              --title "Update Discord client surface" \
-              --body "Hourly scrape of the public web client."
+          # Create is the common path: the previous merge deletes scrape/data.
+          # View only when that branch already has an open pull request.
+          if ! gh pr create --base main --head scrape/data \
+            --title "Update Discord client surface" \
+            --body "Hourly scrape of the public web client." \
+            2>pr-create.err; then
+            if ! gh pr view scrape/data --json url --jq .url >/dev/null; then
+              cat pr-create.err >&2
+              exit 1
+            fi
           fi
           gh pr merge scrape/data --merge --delete-branch \
             --subject "chore: update Discord client surface [skip ci]" \
@@ -71,76 +79,48 @@ jobs:
 
       - name: Close scraper-failure issue
         if: success()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const label = "scraper-failure";
-            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const issues = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: "open",
-              labels: label,
-            });
-            for (const issue of issues.data) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issue.number,
-                body: `Scraper succeeded again. Closing this issue.\n\n[Workflow run](${runUrl})`,
-              });
-              await github.rest.issues.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issue.number,
-                state: "closed",
-              });
-            }
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          numbers="$(gh issue list --label scraper-failure --state open --json number --jq '.[].number')"
+          if [ -z "${numbers}" ]; then
+            exit 0
+          fi
+          while IFS= read -r number; do
+            gh issue comment "${number}" --body "$(printf '%s\n\n%s' \
+              "Scraper succeeded again. Closing this issue." \
+              "[Workflow run](${run_url})")"
+            gh issue close "${number}"
+          done <<< "${numbers}"
 
       - name: Open or update scraper-failure issue
         if: failure() && steps.scrape.outcome == 'failure'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const label = "scraper-failure";
-            const title = "Scraper failed to read the Discord client";
-            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const body = `The Discord client scraper failed (network error or unreadable app page).\n\n[Workflow run](${runUrl})`;
-
-            try {
-              await github.rest.issues.createLabel({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                name: label,
-                color: "B60205",
-                description: "Discord client scraper could not read the app page",
-              });
-            } catch (error) {
-              if (error.status !== 422) {
-                throw error;
-              }
-            }
-
-            const issues = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: "open",
-              labels: label,
-            });
-
-            if (issues.data.length === 0) {
-              await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title,
-                labels: [label],
-                body,
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issues.data[0].number,
-                body: `The scraper failed again.\n\n[Workflow run](${runUrl})`,
-              });
-            }
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          label_err="$(mktemp)"
+          if ! gh label create scraper-failure --color B60205 \
+            --description "Discord client scraper could not read the app page" \
+            2>"${label_err}"; then
+            if ! grep -qi "already exists" "${label_err}"; then
+              cat "${label_err}" >&2
+              exit 1
+            fi
+          fi
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          body="$(printf '%s\n\n%s' \
+            "The Discord client scraper failed (network error or unreadable app page)." \
+            "[Workflow run](${run_url})")"
+          number="$(gh issue list --label scraper-failure --state open --json number --jq '.[0].number // empty')"
+          if [ -z "${number}" ]; then
+            gh issue create --title "Scraper failed to read the Discord client" \
+              --label scraper-failure --body "${body}"
+          else
+            again="$(printf '%s\n\n%s' \
+              "The scraper failed again." \
+              "[Workflow run](${run_url})")"
+            gh issue comment "${number}" --body "${again}"
+          fi

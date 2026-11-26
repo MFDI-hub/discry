@@ -119,8 +119,8 @@ On a history key, an empty `version_hash` falls back to `build_id`.
 `build_number`, `capabilities`, `client_build_number`, and `api_version` are
 compared as integers. Other key fields are compared as text.
 
-The hourly workflow sets `SCRAPER_LATEST_FORMATS=json,md,csv,toml,yaml` and
-leaves `output_formats` at `json`.
+The hourly workflow sets `SCRAPER_LATEST_FORMATS=json,md,csv,toml,yaml`,
+`SCRAPER_CHANNEL_CONCURRENCY=3`, and leaves `output_formats` at `json`.
 
 ## Time
 
