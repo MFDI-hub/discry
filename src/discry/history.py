@@ -5,6 +5,9 @@ from __future__ import annotations
 import csv
 import io
 import json
+import logging
+from collections.abc import Mapping
+from datetime import timezone
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -18,10 +21,12 @@ from .config import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
     from datetime import datetime
 
     from .models import ClientSurface
+
+logger = logging.getLogger(__name__)
+_ARCHIVE_TIME = "%Y-%m-%dT%H-%M-%SZ"
 
 _EXTENSIONS = {"json": "json", "md": "md", "csv": "csv", "toml": "toml", "yaml": "yaml"}
 _INT_KEY_FIELDS = {"build_number", "capabilities", "client_build_number", "api_version"}
@@ -155,21 +160,24 @@ def merge_history(
     surfaces: list[ClientSurface],
     scraped_at: datetime | None = None,
     settings: Settings | None = None,
+    known_keys: set[tuple[Any, ...]] | None = None,
 ) -> tuple[dict[str, Any], list[Mapping[str, Any]]]:
     """
     Build the latest snapshot and append unseen surfaces to history.
 
     Parameters:
-        history (list[Mapping[str, Any]]): Rows already stored.
+        history (list[Mapping[str, Any]]): Rows already stored in the open file.
         surfaces (list[ClientSurface]): Surfaces from this run.
         scraped_at (datetime | None): Timestamp stored on new rows. None uses
             the settings clock.
         settings (Settings | None): Field lists, formats, and the clock.
             Defaults to ``Settings()``.
+        known_keys (set[tuple[Any, ...]] | None): Keys already stored in closed
+            history files. Those rows are not appended again.
 
     Returns:
         tuple[dict[str, Any], list[Mapping[str, Any]]]: Latest document, then the
-        combined history.
+        open history.
     """
     settings = settings or Settings()
     moment = resolve_moment(settings, scraped_at)
@@ -186,7 +194,8 @@ def merge_history(
             for surface in surfaces
         },
     }
-    existing = {history_key(row, settings.history_key_fields) for row in history}
+    existing = set(known_keys or ())
+    existing.update(history_key(row, settings.history_key_fields) for row in history)
     merged: list[Mapping[str, Any]] = list(history)
     for surface in surfaces:
         row = _project_surface(
@@ -503,6 +512,263 @@ def _write_payload(path: Path, payload: Any, fmt: str, settings: Settings, title
     path.write_text(text, encoding="utf-8")
 
 
+def _history_rows(path: Path) -> list[Any]:
+    """
+    Read a history JSON array.
+
+    Parameters:
+        path (Path): History file. A missing file is an empty log.
+
+    Returns:
+        list[Any]: Rows in the file.
+
+    Raises:
+        TypeError: The file exists and is not a JSON array.
+    """
+    payload = load_json(path, [])
+    if not isinstance(payload, list):
+        raise TypeError(f"{path} must contain a JSON array")
+    return payload
+
+
+def _archived_history(directory: Path, stem: str) -> list[Path]:
+    """
+    Return closed history JSON files, oldest name first.
+
+    Parameters:
+        directory (Path): History directory.
+        stem (str): Open-file stem. Closed files are ``{stem}-*.json``.
+
+    Returns:
+        list[Path]: Archive paths. The open ``{stem}.json`` is not included.
+    """
+    prefix = f"{stem}-"
+    paths = [
+        path
+        for path in directory.glob(f"{stem}-*.json")
+        if path.is_file() and path.name.startswith(prefix)
+    ]
+    return sorted(paths)
+
+
+def _archive_keys(directory: Path, stem: str, key_fields: tuple[str, ...]) -> set[tuple[Any, ...]]:
+    """
+    Return identity keys already stored in closed history files.
+
+    Parameters:
+        directory (Path): History directory.
+        stem (str): Open-file stem.
+        key_fields (tuple[str, ...]): Fields that form a history key.
+
+    Returns:
+        set[tuple[Any, ...]]: Keys from every closed JSON log.
+
+    Raises:
+        TypeError: A closed file is not a JSON array.
+    """
+    keys: set[tuple[Any, ...]] = set()
+    for path in _archived_history(directory, stem):
+        for row in _history_rows(path):
+            if isinstance(row, Mapping):
+                keys.add(history_key(row, key_fields))
+    return keys
+
+
+def _payload_size(payload: Any, fmt: str, settings: Settings) -> int:
+    """
+    Return the encoded size of one history payload.
+
+    Parameters:
+        payload (Any): History rows.
+        fmt (str): ``json``, ``md``, ``csv``, ``toml``, or ``yaml``.
+        settings (Settings): JSON options.
+
+    Returns:
+        int: Size in bytes.
+    """
+    if fmt == "json":
+        return len(_json_bytes(payload, settings))
+    if fmt == "md":
+        text = _markdown(payload, "history")
+    elif fmt == "csv":
+        text = _csv_text(payload)
+    elif fmt == "toml":
+        text = _toml_text(payload)
+    else:
+        text = _yaml_text(payload)
+    return len(text.encode())
+
+
+def _exceeds(payload: Any, formats: list[str], settings: Settings, limit: int) -> bool:
+    """
+    Return whether any format of ``payload`` reaches ``limit``.
+
+    Parameters:
+        payload (Any): History rows.
+        formats (list[str]): Formats that will be written.
+        settings (Settings): JSON options.
+        limit (int): Maximum open-file size in bytes.
+
+    Returns:
+        bool: True when a format is at or over the limit.
+    """
+    return any(_payload_size(payload, fmt, settings) >= limit for fmt in formats)
+
+
+def _open_files_exceed(directory: Path, stem: str, limit: int) -> bool:
+    """
+    Return whether an open history file already reaches ``limit``.
+
+    Parameters:
+        directory (Path): History directory.
+        stem (str): Open-file stem.
+        limit (int): Maximum open-file size in bytes.
+
+    Returns:
+        bool: True when a ``{stem}.{ext}`` file is at or over the limit.
+    """
+    for extension in dict.fromkeys(_EXTENSIONS.values()):
+        path = directory / f"{stem}.{extension}"
+        if path.is_file() and path.stat().st_size >= limit:
+            return True
+    return False
+
+
+def _archive_stamp(moment: datetime) -> str:
+    """
+    Return a filesystem-safe UTC time for a closed history file.
+
+    Parameters:
+        moment (datetime): Instant the open file is closed. A naive value is
+            treated as UTC.
+
+    Returns:
+        str: ``YYYY-MM-DDTHH-MM-SSZ``.
+    """
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=timezone.utc)
+    return moment.astimezone(timezone.utc).strftime(_ARCHIVE_TIME)
+
+
+def _unique_stamp(directory: Path, stem: str, moment: datetime) -> str:
+    """
+    Return an archive stamp that does not collide with a file already there.
+
+    Parameters:
+        directory (Path): History directory.
+        stem (str): Open-file stem.
+        moment (datetime): Instant the file is closed.
+
+    Returns:
+        str: Stamp, plus ``-2``, ``-3``, and so on when that second is taken.
+    """
+    stamp = _archive_stamp(moment)
+    suffix = ""
+    index = 2
+    extensions = tuple(dict.fromkeys(_EXTENSIONS.values()))
+    while any((directory / f"{stem}-{stamp}{suffix}.{ext}").exists() for ext in extensions):
+        suffix = f"-{index}"
+        index += 1
+    return f"{stamp}{suffix}"
+
+
+def _close_open_history(directory: Path, stem: str, moment: datetime) -> list[Path]:
+    """
+    Rename the open history files with the time they are closed.
+
+    Parameters:
+        directory (Path): History directory.
+        stem (str): Open-file stem.
+        moment (datetime): Instant the files are closed.
+
+    Returns:
+        list[Path]: Closed files. Empty when nothing was open.
+    """
+    present = [
+        directory / f"{stem}.{extension}"
+        for extension in dict.fromkeys(_EXTENSIONS.values())
+        if (directory / f"{stem}.{extension}").is_file()
+    ]
+    if not present:
+        return []
+    stamp = _unique_stamp(directory, stem, moment)
+    closed: list[Path] = []
+    for source in present:
+        target = directory / f"{stem}-{stamp}{source.suffix}"
+        source.rename(target)
+        closed.append(target)
+        logger.info("Closed %s as %s", source.name, target.name)
+    return closed
+
+
+def _fit_segments(
+    rows: list[Any],
+    formats: list[str],
+    settings: Settings,
+    limit: int,
+) -> list[list[Any]]:
+    """
+    Split rows so each segment stays under ``limit`` when it can.
+
+    A single row that is already over the limit stays in its own segment.
+
+    Parameters:
+        rows (list[Any]): Rows to place, in order.
+        formats (list[str]): Formats whose encoded size counts.
+        settings (Settings): JSON options.
+        limit (int): Maximum segment size in bytes.
+
+    Returns:
+        list[list[Any]]: Segments. The last one stays the open file. An empty
+        input is one empty segment.
+    """
+    if not rows:
+        return [[]]
+    segments: list[list[Any]] = []
+    current: list[Any] = []
+    for row in rows:
+        trial = [*current, row]
+        if current and _exceeds(trial, formats, settings, limit):
+            segments.append(current)
+            current = [row]
+        else:
+            current = trial
+    segments.append(current)
+    return segments
+
+
+def _write_history_rows(
+    directory: Path,
+    stem: str,
+    rows: list[Any],
+    formats: list[str],
+    settings: Settings,
+    *,
+    stamp: str | None = None,
+) -> list[Path]:
+    """
+    Write one history segment.
+
+    Parameters:
+        directory (Path): History directory.
+        stem (str): Open-file stem.
+        rows (list[Any]): Rows in this segment.
+        formats (list[str]): Formats to write.
+        settings (Settings): JSON options.
+        stamp (str | None): Closed-file time. None writes the open files.
+
+    Returns:
+        list[Path]: Files written.
+    """
+    written: list[Path] = []
+    name = stem if stamp is None else f"{stem}-{stamp}"
+    for fmt in formats:
+        path = directory / f"{name}.{_EXTENSIONS[fmt]}"
+        _write_payload(path, rows, fmt, settings, "history")
+        written.append(path)
+    return written
+
+
 def write_data_files(
     data_dir: Path,
     surfaces: list[ClientSurface],
@@ -517,6 +783,14 @@ def write_data_files(
 
     The JSON history file is the append log. It is updated even when ``json``
     is not one of the output formats, so later runs can still see old rows.
+    Closed files are ``{history_filename}-YYYY-MM-DDTHH-MM-SSZ.json`` and use
+    the same extra formats. Their keys still count, so a build already stored
+    there is not appended again.
+
+    When the open file is at ``history_rotate_bytes``, or the next write would
+    reach it, that file is renamed with the UTC time of the change and new
+    rows continue in a new open file. The default leaves room under GitHub's
+    100 MB file limit.
 
     Parameters:
         data_dir (Path): Directory used when a format's directory is unset.
@@ -526,19 +800,25 @@ def write_data_files(
             ``Settings()``.
 
     Returns:
-        list[Path]: Files that were written.
+        list[Path]: Files written or closed during this run.
 
     Raises:
-        TypeError: The JSON history file exists and is not an array.
+        TypeError: A JSON history file exists and is not an array.
     """
     settings = settings or Settings()
     latest_dir = Path(settings.latest_dir) if settings.latest_dir else data_dir
     history_dir = Path(settings.history_dir) if settings.history_dir else data_dir
-    history_path = history_dir / f"{settings.history_filename}.json"
-    history = load_json(history_path, [])
-    if not isinstance(history, list):
-        raise TypeError(f"{history_path} must contain a JSON array")
-    latest, merged = merge_history(history, surfaces, scraped_at=scraped_at, settings=settings)
+    stem = settings.history_filename
+    history_path = history_dir / f"{stem}.json"
+    history = _history_rows(history_path)
+    known = _archive_keys(history_dir, stem, settings.history_key_fields)
+    latest, merged = merge_history(
+        history,
+        surfaces,
+        scraped_at=scraped_at,
+        settings=settings,
+        known_keys=known,
+    )
     written: list[Path] = []
     latest_formats = list(dict.fromkeys(settings.latest_formats or settings.output_formats))
     history_formats = list(dict.fromkeys(settings.output_formats))
@@ -549,9 +829,26 @@ def write_data_files(
         latest_path = latest_dir / f"{settings.latest_filename}.{extension}"
         _write_payload(latest_path, latest, fmt, settings, "latest")
         written.append(latest_path)
-    for fmt in history_formats:
-        extension = _EXTENSIONS[fmt]
-        row_path = history_dir / f"{settings.history_filename}.{extension}"
-        _write_payload(row_path, merged, fmt, settings, "history")
-        written.append(row_path)
+    limit = settings.history_rotate_bytes
+    moment = resolve_moment(settings, scraped_at)
+    new_rows = list(merged[len(history) :])
+    file_full = _open_files_exceed(history_dir, stem, limit)
+    write_full = _exceeds(merged, history_formats, settings, limit)
+    if not file_full and not write_full:
+        written.extend(
+            _write_history_rows(history_dir, stem, list(merged), history_formats, settings)
+        )
+        return written
+    if history:
+        written.extend(_close_open_history(history_dir, stem, moment))
+        pending = new_rows
+    else:
+        pending = list(merged)
+    segments = _fit_segments(pending, history_formats, settings, limit)
+    for chunk in segments[:-1]:
+        stamp = _unique_stamp(history_dir, stem, moment)
+        written.extend(
+            _write_history_rows(history_dir, stem, chunk, history_formats, settings, stamp=stamp)
+        )
+    written.extend(_write_history_rows(history_dir, stem, segments[-1], history_formats, settings))
     return written

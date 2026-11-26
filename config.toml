@@ -35,6 +35,11 @@ download_concurrency = 8
 # json_trailing_newline = true
 # latest_filename = "latest"
 # history_filename = "history"
+# Close history.json at 95 MB, under GitHub's 100 MB file limit.
+# The closed file is history-YYYY-MM-DDTHH-MM-SSZ.json.
+# history_rotate_bytes = 95000000
+# save_client = true
+# client_dir = ""
 # write_output = true
 # write_on_fetch = false
 # drop_nulls = false

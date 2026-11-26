@@ -32,6 +32,8 @@ def test_unknown_key_and_bad_timeout(tmp_path: Path) -> None:
         load_settings(config_path=config, environ=False)
     with pytest.raises(ValueError, match="timeout"):
         Settings(timeout=0).validate()
+    with pytest.raises(ValueError, match="history_rotate_bytes"):
+        Settings(history_rotate_bytes=0).validate()
 
 
 def test_missing_domain_is_rejected() -> None:

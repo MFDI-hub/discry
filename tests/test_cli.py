@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 from discry.cli import main
+from discry.client_code import ChannelCapture
 from discry.latest import LatestSurfaces
 from discry.models import ClientSurface
 from discry.scraper import SurfaceNotFoundError
@@ -17,7 +18,7 @@ def test_main_scrape_writes_data(monkeypatch: pytest.MonkeyPatch, tmp_path) -> N
 
     async def fake_scrape(**kwargs):
         assert kwargs["settings"].channels == ("stable",)
-        return [surface]
+        return [ChannelCapture(surface=surface, page="<html></html>", scripts=())]
 
     written: list[ClientSurface] = []
 
@@ -26,7 +27,7 @@ def test_main_scrape_writes_data(monkeypatch: pytest.MonkeyPatch, tmp_path) -> N
         written.extend(surfaces)
         return [data_dir / "latest.json", data_dir / "history.json"]
 
-    monkeypatch.setattr("discry.cli.scrape_channels", fake_scrape)
+    monkeypatch.setattr("discry.cli.capture_channels", fake_scrape)
     monkeypatch.setattr("discry.cli.write_data_files", fake_write)
     assert (
         main(
@@ -56,7 +57,7 @@ def test_main_reports_scrape_and_fetch_failures(monkeypatch: pytest.MonkeyPatch,
         del kwargs
         raise SurfaceNotFoundError("down")
 
-    monkeypatch.setattr("discry.cli.scrape_channels", boom)
+    monkeypatch.setattr("discry.cli.capture_channels", boom)
     assert main(["--config", str(config), "--data-dir", str(tmp_path)]) == 1
 
     def fake_fetch(url, settings):

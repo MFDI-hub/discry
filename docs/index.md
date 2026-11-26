@@ -34,7 +34,10 @@ A normal local run writes two files:
 - `data/history.json` is an append-only log, the same role as
   `discord_build_number_scrapper`'s `data/history.json`. A row is added when
   `channel`, `build_number`, `version_hash`, or `capabilities` changes. An
-  empty version hash falls back to `build_id`.
+  empty version hash falls back to `build_id`. At 95 MB the file is renamed
+  with the UTC time it closed, and a new `data/history.json` continues the log.
+  The app page and its scripts are saved under `data/client/<channel>/` and
+  replaced when the code changes.
 
 The snapshot can also be written as Markdown, CSV, TOML, and YAML. History
 can use those formats too. The hourly GitHub workflow writes all five snapshot
