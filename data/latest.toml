@@ -1,13 +1,13 @@
-updated_at = "2026-11-26T15:24:26.189520+00:00"
+updated_at = "2026-11-27T00:38:55.605699+00:00"
 
 [channels]
 
 [channels.stable]
-build_number = 681034
-version_hash = "87a3b4d3ee8b73056892cd21ef68b66feb47a0e4"
-build_id = "87a3b4d3ee8b73056892cd21ef68b66feb47a0e4"
-built_at = "1795626454431"
-last_modified = "Wed, 25 Nov 2026 17:10:48 GMT"
+build_number = 681625
+version_hash = "1e10484a8f3482c91e53bc10c48352ac95243cb4"
+build_id = "1e10484a8f3482c91e53bc10c48352ac95243cb4"
+built_at = "1795681177399"
+last_modified = "Thu, 26 Nov 2026 08:22:36 GMT"
 release_channel = "stable"
 api_version = 9
 gateway_endpoint = "wss://gateway.discord.gg"
@@ -29,12 +29,12 @@ adyen_key = "live_E3OQ33V6GVGTXOVQZEAFQJ6DJIDVG6SY"
 braintree_key = "production_ktzp8hfp_49pp2rp4phym7387"
 capabilities = 1767421
 capability_values = [1767421]
-client_build_number = 681034
-scraped_at = "2026-11-26T15:24:26.189520+00:00"
+client_build_number = 681625
+scraped_at = "2026-11-27T00:38:55.605699+00:00"
 
 [[channels.stable.assets]]
 name = "web"
-hash = "fce32372e0848f7d"
+hash = "1732a939a32a5e17"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -53,8 +53,8 @@ hash = "8ef9e6cdf9300b81"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "832936"
-hash = "f99c9d6f15f8d600"
+name = "237183"
+hash = "8adb5990ac842f5f"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -68,8 +68,8 @@ hash = "e4fb77326582e6b7"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "531875"
-hash = "26eed316147b5608"
+name = "760476"
+hash = "b912f6ec14757186"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -103,13 +103,13 @@ hash = "4a69dfb63eda8d3a"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "527029"
-hash = "ca7dcba2cd153b4d"
+name = "61979"
+hash = "bf99bac7ae961a61"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "564996"
-hash = "6fc04b58dc2ab5b6"
+name = "187398"
+hash = "e745b22c0e2a3ce3"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -179,7 +179,7 @@ ext = "js"
 
 [[channels.stable.assets]]
 name = "355059"
-hash = "efabce00fc6942bf"
+hash = "f94948910f078847"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -268,8 +268,8 @@ hash = "4f37c6cd3f5104cf"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "587308"
-hash = "4c62a32fca8d0709"
+name = "499638"
+hash = "b8b1861dadb3177c"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -318,8 +318,8 @@ hash = "b05bdea445963333"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "474750"
-hash = "16475b6aa3859ac5"
+name = "521332"
+hash = "ffe754e3531494d6"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -453,8 +453,8 @@ hash = "6526d50b20d116e1"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "409495"
-hash = "f011a40937f4bf6c"
+name = "277162"
+hash = "dbf0a8fa9a1f3ee7"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -463,8 +463,13 @@ hash = "a2dcd2059adbd23c"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "718878"
-hash = "7ee22c19799f6069"
+name = "487719"
+hash = "657a95a34505ad7e"
+ext = "js"
+
+[[channels.stable.assets]]
+name = "738079"
+hash = "23306a25a2c8e272"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -703,13 +708,8 @@ hash = "06d6e12bdb5a2656"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "377989"
-hash = "a152ee2d65aaa09a"
-ext = "js"
-
-[[channels.stable.assets]]
-name = "831130"
-hash = "93b57e30b9af5017"
+name = "428197"
+hash = "5951f287b9255621"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -788,8 +788,8 @@ hash = "009f3a5d6fd7c6d3"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "216112"
-hash = "e35547a04276efad"
+name = "685611"
+hash = "f666ada14cda4363"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -813,8 +813,8 @@ hash = "673f66050cb454df"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "796937"
-hash = "0c1af390fa5615f9"
+name = "75739"
+hash = "84925089a8a6c8f0"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1008,23 +1008,8 @@ hash = "a7fabfac14ccfe16"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "879641"
-hash = "03a4822308e46ae3"
-ext = "js"
-
-[[channels.stable.assets]]
-name = "201074"
-hash = "8d8eef15ef47e375"
-ext = "js"
-
-[[channels.stable.assets]]
 name = "250440"
 hash = "8f51b20c6bb413fd"
-ext = "js"
-
-[[channels.stable.assets]]
-name = "843335"
-hash = "151d661c2c4fc146"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1033,23 +1018,8 @@ hash = "1a24f3adeb2cbf83"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "165994"
-hash = "4366ce8ea007c41c"
-ext = "js"
-
-[[channels.stable.assets]]
-name = "847980"
-hash = "91d14d4e8f945ddd"
-ext = "js"
-
-[[channels.stable.assets]]
-name = "977306"
-hash = "ba17dceb004051ed"
-ext = "js"
-
-[[channels.stable.assets]]
-name = "675582"
-hash = "6f9debfe193e5e72"
+name = "584262"
+hash = "a4f7445fbcce3420"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1153,8 +1123,8 @@ hash = "ff76e86da47e6065"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "251400"
-hash = "ebb20281f06bd6d2"
+name = "398384"
+hash = "a302e6e82ec01949"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1258,11 +1228,6 @@ hash = "44220e3163aa5155"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "947870"
-hash = "a49198a550e0a0e2"
-ext = "js"
-
-[[channels.stable.assets]]
 name = "411619"
 hash = "8cf8a55d095f7b0e"
 ext = "js"
@@ -1308,13 +1273,58 @@ hash = "5bc8c14688f4f89a"
 ext = "js"
 
 [[channels.stable.assets]]
+name = "990185"
+hash = "7dd93e7f412dd95f"
+ext = "js"
+
+[[channels.stable.assets]]
+name = "879641"
+hash = "03a4822308e46ae3"
+ext = "js"
+
+[[channels.stable.assets]]
+name = "201074"
+hash = "8d8eef15ef47e375"
+ext = "js"
+
+[[channels.stable.assets]]
+name = "306637"
+hash = "fa963ae8df2faf3f"
+ext = "js"
+
+[[channels.stable.assets]]
+name = "957251"
+hash = "c88afd716b7d1358"
+ext = "js"
+
+[[channels.stable.assets]]
+name = "847980"
+hash = "91d14d4e8f945ddd"
+ext = "js"
+
+[[channels.stable.assets]]
+name = "977306"
+hash = "ba17dceb004051ed"
+ext = "js"
+
+[[channels.stable.assets]]
+name = "501095"
+hash = "ea7312473044d9cc"
+ext = "js"
+
+[[channels.stable.assets]]
+name = "213922"
+hash = "b5ba77df05ce3883"
+ext = "js"
+
+[[channels.stable.assets]]
 name = "85427"
 hash = "60d047257462dbf3"
 ext = "js"
 
 [[channels.stable.assets]]
 name = "249938"
-hash = "2255d56558538993"
+hash = "87970c6a535f19b7"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1388,8 +1398,8 @@ hash = "2b9b9b38ef296a3c"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "126301"
-hash = "ae0fcd1d9cd55004"
+name = "933373"
+hash = "17283993e6b85e6b"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1423,8 +1433,8 @@ hash = "78b2d3036e5423c2"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "144909"
-hash = "8ef825a03e17ddd0"
+name = "589302"
+hash = "412a90f9c0388cd2"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1433,8 +1443,8 @@ hash = "0908b4696ff96883"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "846900"
-hash = "c624e9d01243c25c"
+name = "730931"
+hash = "6304cecfb4e8d95b"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1479,7 +1489,7 @@ ext = "js"
 
 [[channels.stable.assets]]
 name = "520689"
-hash = "ee9ecdf4726b18e7"
+hash = "d8fd7bb4ca6288c4"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1495,6 +1505,11 @@ ext = "js"
 [[channels.stable.assets]]
 name = "686889"
 hash = "77ceb8368182ed71"
+ext = "js"
+
+[[channels.stable.assets]]
+name = "538208"
+hash = "2234bdf9bfc41515"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1538,8 +1553,8 @@ hash = "0accfb6019a73988"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "5257"
-hash = "74aab6aad113e4a2"
+name = "116145"
+hash = "52d58a25bca9a6ea"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1673,8 +1688,8 @@ hash = "f6de5d383a719d0f"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "685143"
-hash = "cfbbe63075960680"
+name = "470109"
+hash = "947e6c3854de94bb"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1688,8 +1703,8 @@ hash = "b61909819aff5274"
 ext = "js"
 
 [[channels.stable.assets]]
-name = "881717"
-hash = "2c24b765cfce9354"
+name = "799075"
+hash = "d7de4a35375c72af"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1774,7 +1789,7 @@ ext = "js"
 
 [[channels.stable.assets]]
 name = "sentry"
-hash = "1c93d23f1e56bb2a"
+hash = "f0c1db4720a1a128"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1789,7 +1804,7 @@ ext = "js"
 
 [[channels.stable.assets]]
 name = "fast-connect"
-hash = "9b3849992180ffd1"
+hash = "2acbe61f6d49dd79"
 ext = "js"
 
 [[channels.stable.assets]]
@@ -1933,8 +1948,8 @@ hash = "4c56e47fec855067"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "881717"
-hash = "5d81525647753ba3"
+name = "799075"
+hash = "81c5b7fc69d38bd5"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -1948,8 +1963,8 @@ hash = "536670d0480099d9"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "685143"
-hash = "94ab7b876f4cf9ce"
+name = "470109"
+hash = "33e6f08d807e725b"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2083,8 +2098,8 @@ hash = "fa5e0a7018076958"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "5257"
-hash = "cc568b3d803c94d2"
+name = "116145"
+hash = "5c47c03a93ea15a2"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2128,6 +2143,11 @@ hash = "26d2f42bc41c6844"
 ext = "css"
 
 [[channels.stable.assets]]
+name = "538208"
+hash = "68d4ec64606cf9df"
+ext = "css"
+
+[[channels.stable.assets]]
 name = "686889"
 hash = "a2866853b75b80d4"
 ext = "css"
@@ -2144,7 +2164,7 @@ ext = "css"
 
 [[channels.stable.assets]]
 name = "520689"
-hash = "b505df18764680e8"
+hash = "f21ef37de6a9ac38"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2188,8 +2208,8 @@ hash = "dfbea570e47191e5"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "846900"
-hash = "00c65be996be2cc3"
+name = "730931"
+hash = "aea5fd6e5e9f7624"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2198,8 +2218,8 @@ hash = "1f37846f1ab1bbf2"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "144909"
-hash = "fd47d764f732cb21"
+name = "589302"
+hash = "24603fb55a8cbd95"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2233,8 +2253,8 @@ hash = "65d5c02aaf0702ab"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "126301"
-hash = "ced4a70b0343dcb3"
+name = "933373"
+hash = "f1a262ac1d68397f"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2309,12 +2329,57 @@ ext = "css"
 
 [[channels.stable.assets]]
 name = "249938"
-hash = "64a7b2f9fe8aecc3"
+hash = "506ed2b713831366"
 ext = "css"
 
 [[channels.stable.assets]]
 name = "85427"
 hash = "0d7f1ccc3de2414a"
+ext = "css"
+
+[[channels.stable.assets]]
+name = "213922"
+hash = "f197a6ee317b2bd0"
+ext = "css"
+
+[[channels.stable.assets]]
+name = "501095"
+hash = "8f395e2442d87728"
+ext = "css"
+
+[[channels.stable.assets]]
+name = "977306"
+hash = "fc7bfdfcdb4b7386"
+ext = "css"
+
+[[channels.stable.assets]]
+name = "847980"
+hash = "085d94bd1782d041"
+ext = "css"
+
+[[channels.stable.assets]]
+name = "957251"
+hash = "42a69cbc85d44d5a"
+ext = "css"
+
+[[channels.stable.assets]]
+name = "306637"
+hash = "fa395349ccb53904"
+ext = "css"
+
+[[channels.stable.assets]]
+name = "201074"
+hash = "77ad364c1e0fdc4c"
+ext = "css"
+
+[[channels.stable.assets]]
+name = "879641"
+hash = "e613f8a7c4323dc8"
+ext = "css"
+
+[[channels.stable.assets]]
+name = "990185"
+hash = "2fc05349f9c8fe3a"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2363,11 +2428,6 @@ hash = "68676077109fb052"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "947870"
-hash = "af3274ab3b6c754e"
-ext = "css"
-
-[[channels.stable.assets]]
 name = "834050"
 hash = "cf06a37e57d2085e"
 ext = "css"
@@ -2389,7 +2449,7 @@ ext = "css"
 
 [[channels.stable.assets]]
 name = "447272"
-hash = "04397871d1897451"
+hash = "36c2d0036b5c3a53"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2468,8 +2528,8 @@ hash = "c6a9beab4ec4bb8a"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "251400"
-hash = "f8626c6d53dcc48a"
+name = "398384"
+hash = "3d12658413d943f8"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2573,23 +2633,8 @@ hash = "7b785ebf543e747f"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "675582"
-hash = "48f2a400d7f42547"
-ext = "css"
-
-[[channels.stable.assets]]
-name = "977306"
-hash = "fc7bfdfcdb4b7386"
-ext = "css"
-
-[[channels.stable.assets]]
-name = "847980"
-hash = "085d94bd1782d041"
-ext = "css"
-
-[[channels.stable.assets]]
-name = "165994"
-hash = "b5dcbd89a1848e81"
+name = "584262"
+hash = "99d256532fada15a"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2598,23 +2643,8 @@ hash = "a324fc3e25f09906"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "843335"
-hash = "9150e76b00a738a0"
-ext = "css"
-
-[[channels.stable.assets]]
 name = "250440"
 hash = "d0eeabd186a0dcdb"
-ext = "css"
-
-[[channels.stable.assets]]
-name = "201074"
-hash = "77ad364c1e0fdc4c"
-ext = "css"
-
-[[channels.stable.assets]]
-name = "879641"
-hash = "e613f8a7c4323dc8"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2808,8 +2838,8 @@ hash = "3863424f7469c494"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "796937"
-hash = "e506787cba90b844"
+name = "75739"
+hash = "677178b09bd30eb1"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2833,8 +2863,8 @@ hash = "04cd3e25e6237ce1"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "216112"
-hash = "a11ae4a4b4487718"
+name = "685611"
+hash = "0ae630e2ae4d09c4"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -2913,13 +2943,8 @@ hash = "24b169356f5d51e7"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "831130"
-hash = "1c19a000fbdf0515"
-ext = "css"
-
-[[channels.stable.assets]]
-name = "377989"
-hash = "7f9f1bb1aae230e7"
+name = "428197"
+hash = "f8db58e05fd06963"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -3158,8 +3183,13 @@ hash = "4b639f1a109b2007"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "718878"
-hash = "1e9c0da93c6516bd"
+name = "738079"
+hash = "ce90cde2481c6f78"
+ext = "css"
+
+[[channels.stable.assets]]
+name = "487719"
+hash = "0b692f6f47fcbec5"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -3168,8 +3198,8 @@ hash = "f8e86da0a757503b"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "409495"
-hash = "447ed260e2941e4b"
+name = "277162"
+hash = "9c315d6a3e83aedc"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -3303,8 +3333,8 @@ hash = "58a63ab233bd682d"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "474750"
-hash = "186cac670759514d"
+name = "521332"
+hash = "a72d27a73473b6fc"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -3353,8 +3383,8 @@ hash = "ad2cfead4f2c7523"
 ext = "css"
 
 [[channels.stable.assets]]
-name = "587308"
-hash = "7241ede0566f6d72"
+name = "499638"
+hash = "3ead81de4452cf53"
 ext = "css"
 
 [[channels.stable.assets]]
@@ -3530,7 +3560,7 @@ braintree_key = "production_ktzp8hfp_49pp2rp4phym7387"
 capabilities = 1767421
 capability_values = [1767421]
 client_build_number = 681625
-scraped_at = "2026-11-26T15:24:26.189520+00:00"
+scraped_at = "2026-11-27T00:38:55.605699+00:00"
 
 [[channels.ptb.assets]]
 name = "web"
@@ -7033,11 +7063,11 @@ hash = "8ea992ea8347e7c0"
 ext = "css"
 
 [channels.canary]
-build_number = 681673
-version_hash = "0f679c439c71c03f0f0905b5eacac8b5f2b19399"
-build_id = "0f679c439c71c03f0f0905b5eacac8b5f2b19399"
-built_at = "1795705500327"
-last_modified = "Thu, 26 Nov 2026 15:08:07 GMT"
+build_number = 681705
+version_hash = "9968d8f862b08524cc13c791ba54b402bd249812"
+build_id = "9968d8f862b08524cc13c791ba54b402bd249812"
+built_at = "1795730191013"
+last_modified = "Thu, 26 Nov 2026 21:59:50 GMT"
 release_channel = "canary"
 api_version = 9
 gateway_endpoint = "wss://gateway.discord.gg"
@@ -7059,12 +7089,12 @@ adyen_key = "live_E3OQ33V6GVGTXOVQZEAFQJ6DJIDVG6SY"
 braintree_key = "production_ktzp8hfp_49pp2rp4phym7387"
 capabilities = 1767421
 capability_values = [1767421]
-client_build_number = 681673
-scraped_at = "2026-11-26T15:24:26.189520+00:00"
+client_build_number = 681705
+scraped_at = "2026-11-27T00:38:55.605699+00:00"
 
 [[channels.canary.assets]]
 name = "web"
-hash = "8309e9a8e3fde489"
+hash = "8690154844785b6c"
 ext = "js"
 
 [[channels.canary.assets]]
@@ -8819,7 +8849,7 @@ ext = "js"
 
 [[channels.canary.assets]]
 name = "sentry"
-hash = "afe77f00f31fbd79"
+hash = "8cddb77604d460d8"
 ext = "js"
 
 [[channels.canary.assets]]
@@ -8834,7 +8864,7 @@ ext = "js"
 
 [[channels.canary.assets]]
 name = "fast-connect"
-hash = "7010fa9e4ed3151f"
+hash = "d953200d1f7627f0"
 ext = "js"
 
 [[channels.canary.assets]]
