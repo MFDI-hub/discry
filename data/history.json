@@ -180,5 +180,19 @@
     "release_channel": "canary",
     "built_at": "1795830032956",
     "first_seen": "2026-11-28T02:45:00.618892+00:00"
+  },
+  {
+    "channel": "canary",
+    "build_number": 681817,
+    "version_hash": "1ec52e026c78cb4761d437d05c3e2102d4485d9f",
+    "build_id": "1ec52e026c78cb4761d437d05c3e2102d4485d9f",
+    "capabilities": 1767421,
+    "capability_values": [
+      1767421
+    ],
+    "client_build_number": 681817,
+    "release_channel": "canary",
+    "built_at": "1795858582813",
+    "first_seen": "2026-11-28T11:55:55.523938+00:00"
   }
 ]
