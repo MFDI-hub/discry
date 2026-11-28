@@ -1,4 +1,4 @@
-updated_at: "2026-11-28T02:45:00.618892+00:00"
+updated_at: "2026-11-28T11:55:55.523938+00:00"
 channels:
   stable:
     build_number: 681709
@@ -2834,7 +2834,7 @@ channels:
     capability_values:
       - 1767421
     client_build_number: 681709
-    scraped_at: "2026-11-28T02:45:00.618892+00:00"
+    scraped_at: "2026-11-28T11:55:55.523938+00:00"
   ptb:
     build_number: 681709
     version_hash: "06af066b81c493b9780fb504eed0f40a50c2abea"
@@ -5669,13 +5669,13 @@ channels:
     capability_values:
       - 1767421
     client_build_number: 681709
-    scraped_at: "2026-11-28T02:45:00.618892+00:00"
+    scraped_at: "2026-11-28T11:55:55.523938+00:00"
   canary:
-    build_number: 681776
-    version_hash: "8fda3067e8e50a4b31be52b29a5224524198e49b"
-    build_id: "8fda3067e8e50a4b31be52b29a5224524198e49b"
-    built_at: "1795830032956"
-    last_modified: "Sat, 28 Nov 2026 01:43:40 GMT"
+    build_number: 681817
+    version_hash: "1ec52e026c78cb4761d437d05c3e2102d4485d9f"
+    build_id: "1ec52e026c78cb4761d437d05c3e2102d4485d9f"
+    built_at: "1795858582813"
+    last_modified: "Sat, 28 Nov 2026 09:39:44 GMT"
     release_channel: "canary"
     api_version: 9
     gateway_endpoint: "wss://gateway.discord.gg"
@@ -5693,7 +5693,7 @@ channels:
     assets:
       -
         name: "web"
-        hash: "9946d4c727a88bde"
+        hash: "f577fbeb07e257f6"
         ext: "js"
       -
         name: "824723"
@@ -7097,7 +7097,7 @@ channels:
         ext: "js"
       -
         name: "sentry"
-        hash: "b4669aee8392a8ee"
+        hash: "fec49a6e4caf9746"
         ext: "js"
       -
         name: "619666"
@@ -7109,7 +7109,7 @@ channels:
         ext: "js"
       -
         name: "fast-connect"
-        hash: "1d71896c34423807"
+        hash: "995ec449fa6e05de"
         ext: "js"
       -
         name: "40715"
@@ -8503,5 +8503,5 @@ channels:
     capabilities: 1767421
     capability_values:
       - 1767421
-    client_build_number: 681776
-    scraped_at: "2026-11-28T02:45:00.618892+00:00"
+    client_build_number: 681817
+    scraped_at: "2026-11-28T11:55:55.523938+00:00"
